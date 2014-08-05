@@ -1,0 +1,74 @@
+var L;
+var printSTR = "";
+var outDIV;
+var stopAT;
+var stack = [];
+
+
+function parseDOMat(e){
+ L=0;
+ stopAT=e;
+ walkThisBranch(e);
+}
+
+
+function walkThisBranch(e){
+ if(e.hasChildNodes()){
+  doStuff(e);
+  e=e.firstChild;
+  L++;
+  walkThisBranch(e);
+ }else if(e.nextSibling != null){
+  doStuff(e);
+  e=e.nextSibling;
+  endTags(e);
+  walkThisBranch(e);
+ }else{
+  doStuff(e);
+  while(e.nextSibling == null && e != stopAT){
+   e=e.parentNode;
+   endTags(e); //is one behind
+   L--;
+  };
+
+  if(e != stopAT){
+   e=e.nextSibling;
+   endTags(e);
+   walkThisBranch(e);
+  }else{
+   endTags(e)
+  };
+
+ };
+
+};
+
+
+
+
+function doStuff(e){
+ if(e.nodeType != 3){
+  printSTR += (makeTabs(L) + "&lt;" + e.nodeName + (typeof(e.value)==='undefined' ? "" : (" value= \"" + e.value + "\"")) + "&gt;<br>");
+  stack.push("&lt;/" + e.nodeName + "&gt;");
+ }
+ else stack.push("TEXT_NODE");
+};
+
+
+
+function endTags(nodex){
+ var val=stack.pop();
+ if(val != "TEXT_NODE"){
+   printSTR += (makeTabs(L) + val + "<br>");
+ }
+};
+
+
+
+
+
+function makeTabs(x){
+ tabs="";
+ for(i=0;i<x;i++){tabs += "&nbsp;&nbsp;&nbsp;"};
+ return tabs;
+}
