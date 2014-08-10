@@ -6,19 +6,23 @@
 	</head>
 	<body style='background:black;'>
 <script>
-//✔ 
+//✔Store
 var Unicode={space:'\u0020'};
 
-//✔ 
+//✔toProtoMethod 
 var _Slice=Array.prototype.slice;
 var _Call=Function.prototype.call;
 
-//✔ 
+//✔toMethod  
+var _defineProperty =Object.defineProperty;
+
+//✔is?
 function isNumber(e){return typeof(e)==='number'};
 function isUndefined(e){return typeof(e)==='undefined'};
 
-//✔ 
-function defineFunctionShortcut(o,p,x){o[p]=_Call.bind(x);return o};
+//✔Tool 
+function defineFunctionCallShortcut(o,p,x){o[p]=_Call.bind(x);return o};
+
 //✔
 /*ℹ Slice Zero-based
 							index:
@@ -48,7 +52,7 @@ function defineFunctionShortcut(o,p,x){o[p]=_Call.bind(x);return o};
 																		⤷ slice(2,-1) extracts [2, 3, 4, 5]] 
 																		⤷ slice(4,-1) extracts [ 4, 5]] 
 */
-var Slice=defineFunctionShortcut(function(x,i,j){return Slice.f(x,isNumber(i)?i:0,j)},'f',_Slice);//✔ 
+var Slice=defineFunctionCallShortcut(function(x,i,j){return Slice.f(x,isNumber(i)?i:0,j)},'f',_Slice);
 
 
 
@@ -61,7 +65,7 @@ function textSpaced(){return Slice(arguments).join(Unicode.space)};
 
 
 //✔ 
-/*ℹ PropertyDescriptor:
+/*ℹ PropertyData & PropertyDescriptor:
 
 	#value:
 						associated with the property.
@@ -81,7 +85,8 @@ function textSpaced(){return Slice(arguments).join(Unicode.space)};
 						=, +=, -=, *=, /=, %=, <<=, >>=, >>>=, &=, ^=, |=
 						(false by defaults)
 */
-function describePropertyData(v,w,e,c){var x=false;return{value:v,writable:w||x,enumerable:e||x,configurable:c||x}};
+function propertyDescriptor(v,w,e,c){var x=false;return{value:v,writable:w||x,enumerable:e||x,configurable:c||x}};
+function definePropertyData(o,p,v,w,e,c){return _defineProperty(o,p,propertyDescriptor(v,w,e,c))};
 /*ℹ PropertyAccessor:
 	#get
 			A function which serves as a getter for the property.
@@ -138,24 +143,11 @@ console.dir(o);
 
 */
 function definePropertyAccessor(o,p,g,s){
- var k=o[p],t=String(p),n=void(o),o=Object.defineProperty(o,p,{get:g?function(){return g(p,o,t)}:n,set:s?function(v){p=s(v,p,o,t);return p}:n});
+ var k=o[p],t=String(p),n=void(o),o=_defineProperty(o,p,{get:g?function(){return g(p,o,t)}:n,set:s?function(v){p=s(v,p,o,t);return p}:n});
  p=(t in o)?k:n;
  return o;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//
 
 
 
@@ -165,6 +157,16 @@ function definePropertyAccessor(o,p,g,s){
 
 
 //§
+/*
+var xx={}
+definePropertyData(xx,'zx',33);
+console.dir()
+console.log()
+
+Object.getOwnPropertyDescriptor(xx,'zx')
+var _Apply=Function.prototype.apply;
+function defineFunctionApplyShortcut(o,p,x){o[p]=_Apply.bind(x);return o};
+*/
 
 
 
